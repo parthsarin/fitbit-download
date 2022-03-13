@@ -15,7 +15,6 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
     e.preventDefault();
 
     const URL = `https://www.fitbit.com/oauth2/authorize?response_type=token&client_id=${oaConfig.clientId}&redirect_uri=https%3A%2F%2Fdev.parthsarin.com%2Fbiometric&scope=activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight&expires_in=604800`;
-
     window.location.href = URL;
   }
 
@@ -24,7 +23,7 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
       <BackButton onClick={() => setPageState(PageState.MainPage)} />
       <div className="w-4/5 absolute top-20 pb-20" id="settings-page">
         <h1 className="text-3xl mb-4">Configure settings</h1>
-        <p>To configure this application, you'll need to create a developer account with Fitbit. To get started, visit <a href="https://dev.fitbit.com/apps">https://dev.fitbit.com/apps</a> and log in if needed. After logging in, you should see a webpage that looks like this:</p>
+        <p>To configure this application, you'll need to create a developer account with Fitbit. To get started, visit <a className="text-indigo-400 hover:underline" href="https://dev.fitbit.com/apps">https://dev.fitbit.com/apps</a> and log in if needed. After logging in, you should see a webpage that looks like this:</p>
         <img
           src="/img/fitbit-auth/fb-auth-1.png"
           alt="The main page for the Fitbit developer applications, showing no registered applications"

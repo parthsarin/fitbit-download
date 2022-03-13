@@ -5,6 +5,7 @@ import { OAuthConfig } from '../Auth';
 import PageState from './PageState';
 import SettingsPage from '../SettingsPage';
 import './MainPage.css';
+import DownloadPage from '../DownloadPage';
 
 interface MainPageProps {
   oaConfig: OAuthConfig,
@@ -31,6 +32,14 @@ const MainPage = ({ oaConfig, setOAConfig }: MainPageProps) => {
     );
   }
 
+  if (pageState === PageState.DownloadPage) {
+    return (
+      <DownloadPage
+        setPageState={setPageState}
+      />
+    );
+  }
+
   return (
     <div className="w-3/5 h-3/5 flex flex-col justify-between">
       <div 
@@ -42,7 +51,7 @@ const MainPage = ({ oaConfig, setOAConfig }: MainPageProps) => {
       </div>
       <div 
         className={`route-button ${ token ? "" : "rb-disabled"}`} 
-        onClick={ handleClick(PageState.DownloadPage, Boolean(token)) }
+        onClick={ handleClick(PageState.DownloadPage, !Boolean(token)) }
       >
         <img src="/img/download.svg" alt="" />
         <h1 className="text-3xl md:text-6xl">Download data</h1>
