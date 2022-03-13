@@ -1,10 +1,17 @@
 import { useContext, useState } from 'react';
 
 import { TokenContext } from '../App';
+import { OAuthConfig } from '../Auth';
 import PageState from './PageState';
+import SettingsPage from '../SettingsPage';
 import './MainPage.css';
 
-const MainPage = () => {
+interface MainPageProps {
+  oaConfig: OAuthConfig,
+  setOAConfig: (oa: OAuthConfig) => void,
+}
+
+const MainPage = ({ oaConfig, setOAConfig }: MainPageProps) => {
   const token = useContext(TokenContext);
   const [pageState, setPageState] = useState<PageState>(PageState.MainPage);
 
@@ -12,6 +19,16 @@ const MainPage = () => {
   const handleClick = (nextPage: PageState, disabled: boolean) => {
     if (disabled) return () => {}
     return () => setPageState(nextPage);
+  }
+
+  if (pageState === PageState.SettingsPage) {
+    return (
+      <SettingsPage 
+        setPageState={setPageState} 
+        oaConfig={oaConfig} 
+        setOAConfig={setOAConfig}
+      />
+    );
   }
 
   return (

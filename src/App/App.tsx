@@ -5,10 +5,22 @@ import TokenContext from './TokenContext';
 import './App.css';
 
 import MainPage from '../MainPage';
+import {OAuthConfig} from '../Auth';
 
 
 function App() {
   const [token, setToken] = useState<string>("");
+  const [oaConfig, setOAConfig] = useState<OAuthConfig>(
+    localStorage.getItem("oaConfig")
+    ? JSON.parse(localStorage.getItem("oaConfig")!)
+    : { clientId: "", clientSecret: "" }
+  )
+
+  // Reroute OA updates through localStorage
+  const handleOAUpdate = (newOAConfig: OAuthConfig) => {
+    localStorage.setItem("oaConfig", JSON.stringify(newOAConfig));
+    setOAConfig(newOAConfig);
+  }
 
   // Set the token on a redirect
   useEffect(() => {
@@ -24,6 +36,8 @@ function App() {
 
       if (t > expiration) {
         newToken = null;
+        localStorage.removeItem("token");
+        localStorage.removeItem("expiresAt");
       }
     }
 
@@ -51,7 +65,7 @@ function App() {
   return (
     <TokenContext.Provider value={token}>
       <div className="app flex justify-center items-center h-full w-full">
-        <MainPage />
+        <MainPage oaConfig={oaConfig} setOAConfig={handleOAUpdate} />
       </div>
     </TokenContext.Provider>
   );
