@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { TokenContext } from "../App";
 import { downloadSleep } from "./DownloadUtils";
+import styles from './DownloadPage.module.css';
 
 const DownloadSleepData = () => {
     const [startDate, setStartDate] = useState<string>("");
@@ -22,7 +23,7 @@ const DownloadSleepData = () => {
                     </label>
                     <input
                         type="text"
-                        className="input"
+                        className={styles.input}
                         name="start-date"
                         value={startDate}
                         placeholder="yyyy-mm-dd"
@@ -35,7 +36,7 @@ const DownloadSleepData = () => {
                     </label>
                     <input
                         type="text"
-                        className="input"
+                        className={styles.input}
                         name="end-date"
                         value={endDate}
                         placeholder="yyyy-mm-dd"

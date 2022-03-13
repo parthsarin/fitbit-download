@@ -1,9 +1,8 @@
-#settings-page {
+.download-page {
     font-size: 14pt;
 }
 
-
-#settings-page .input {
+.input {
     @apply block mt-2;
     @apply rounded-md w-full;
     @apply border-gray-300 shadow-sm;

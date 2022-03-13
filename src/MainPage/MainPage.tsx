@@ -4,8 +4,11 @@ import { TokenContext } from '../App';
 import { OAuthConfig } from '../Auth';
 import PageState from './PageState';
 import SettingsPage from '../SettingsPage';
-import './MainPage.css';
 import DownloadPage from '../DownloadPage';
+
+import styles from './MainPage.module.css';
+import settings from '../img/settings.svg';
+import download from '../img/download.svg';
 
 interface MainPageProps {
   oaConfig: OAuthConfig,
@@ -43,17 +46,17 @@ const MainPage = ({ oaConfig, setOAConfig }: MainPageProps) => {
   return (
     <div className="w-3/5 h-3/5 flex flex-col justify-between">
       <div 
-        className="route-button" 
+        className={styles["route-button"]}
         onClick={handleClick(PageState.SettingsPage, false)}
       >
-        <img src="/img/settings.svg" alt="" />
+        <img src={settings} alt="" />
         <h1 className="text-3xl md:text-6xl">Configure settings</h1>
       </div>
       <div 
-        className={`route-button ${ token ? "" : "rb-disabled"}`} 
+        className={`${styles["route-button"]} ${ token ? "" : styles["rb-disabled"]}`} 
         onClick={ handleClick(PageState.DownloadPage, !Boolean(token)) }
       >
-        <img src="/img/download.svg" alt="" />
+        <img src={download} alt="" />
         <h1 className="text-3xl md:text-6xl">Download data</h1>
       </div>
     </div>

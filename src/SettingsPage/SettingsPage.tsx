@@ -1,8 +1,11 @@
 import BackButton from './../BackButton';
 import { PageState } from "../MainPage";
-import './SettingsPage.css';
 import { OAuthConfig } from '../Auth';
 import React from 'react';
+
+import styles from './SettingsPage.module.css';
+import fbAuth1 from '../img/fitbit-auth/fb-auth-1.png';
+import fbAuth2 from '../img/fitbit-auth/fb-auth-2.png';
 
 interface SettingsPageProps {
   setPageState: (ps: PageState) => void,
@@ -21,11 +24,11 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
   return (
     <>
       <BackButton onClick={() => setPageState(PageState.MainPage)} />
-      <div className="w-4/5 absolute top-20 pb-20" id="settings-page">
+      <div className={`w-4/5 absolute top-20 pb-20 ${styles['settings-page']}`}>
         <h1 className="text-3xl mb-4">Configure settings</h1>
         <p>To configure this application, you'll need to create a developer account with Fitbit. To get started, visit <a className="text-indigo-400 hover:underline" href="https://dev.fitbit.com/apps">https://dev.fitbit.com/apps</a> and log in if needed. After logging in, you should see a webpage that looks like this:</p>
         <img
-          src="/img/fitbit-auth/fb-auth-1.png"
+          src={fbAuth1}
           alt="The main page for the Fitbit developer applications, showing no registered applications"
           className="w-3/5 mx-auto"
         />  
@@ -74,7 +77,7 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
         </dl>
         <p className="mt-5 mb-5">After finishing this step, the application should look like this:</p>
         <img
-          src="/img/fitbit-auth/fb-auth-2.png"
+          src={fbAuth2}
           alt="The setup for this application, with the information above filled in"
           className="w-2/5 mx-auto"
         />
@@ -86,7 +89,7 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
             </label>
             <input
               type="text"
-              className="input"
+              className={styles["input"]}
               name="client-id"
               value={oaConfig.clientId}
               onChange={(e) => setOAConfig({...oaConfig, clientId: e.target.value})}
@@ -98,7 +101,7 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
             </label>
             <input
               type="text"
-              className="input"
+              className={styles["input"]}
               name="client-secret"
               value={oaConfig.clientSecret}
               onChange={(e) => setOAConfig({ ...oaConfig, clientSecret: e.target.value })}
