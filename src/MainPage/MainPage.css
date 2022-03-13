@@ -1,0 +1,20 @@
+.route-button {
+    @apply w-full h-2/5;
+    @apply rounded-md border border-purple-500;
+    @apply cursor-pointer;
+    @apply hover:bg-slate-800 hover:bg-opacity-40;
+    @apply flex flex-row items-center justify-evenly;
+}
+
+.route-button img {
+    @apply hidden;
+    @apply md:flex;
+    max-height: 70%;
+}
+
+.route-button.rb-disabled {
+    @apply cursor-default;
+    @apply bg-gray-700;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
