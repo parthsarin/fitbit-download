@@ -14,6 +14,10 @@ const BackButton = ({ onClick }: BackButtonProps) => (
       hover:underline hover:underline-offset-4 
     " 
     onClick={onClick}
+    onKeyDown={(e) => { if (e.key === 'Enter') onClick()}}
+    tabIndex={1}
+    role="button"
+    aria-label="go back"
   >
     <FontAwesomeIcon icon={faArrowLeft} className="mr-3" /> 
     Go back

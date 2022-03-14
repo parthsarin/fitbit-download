@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import getHashParams from './UrlParser';
+import { getHashParams, getBaseUrl } from './UrlParser';
 import TokenContext from './TokenContext';
 import './App.css';
 
@@ -15,6 +15,7 @@ function App() {
     ? JSON.parse(localStorage.getItem("oaConfig")!)
     : { clientId: "", clientSecret: "" }
   )
+  const [reauthorize, setReauthorize] = useState<boolean>(false);
 
   // Reroute OA updates through localStorage
   const handleOAUpdate = (newOAConfig: OAuthConfig) => {
@@ -35,6 +36,7 @@ function App() {
       const t = d.getTime();
 
       if (t > expiration) {
+        setReauthorize(true);
         newToken = null;
         localStorage.removeItem("token");
         localStorage.removeItem("expiresAt");
@@ -59,13 +61,17 @@ function App() {
       }
 
       localStorage.setItem("token", newToken);
+
+      if (url.access_token) {
+        window.location.href = getBaseUrl();
+      }
     }
-  }, []);
+  }, [token]);
 
   return (
     <TokenContext.Provider value={token}>
       <div className="app flex justify-center items-center h-full w-full">
-        <MainPage oaConfig={oaConfig} setOAConfig={handleOAUpdate} />
+        <MainPage oaConfig={oaConfig} setOAConfig={handleOAUpdate} reauthorize={reauthorize} />
       </div>
     </TokenContext.Provider>
   );

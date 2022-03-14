@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 
-import { TokenContext } from "../App";
 import BackButton from "../BackButton";
 import Loading from "../Loading";
 import {PageState} from "../MainPage";

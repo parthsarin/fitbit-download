@@ -10,7 +10,8 @@ interface DownloadIntradayDataProps {
 const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [resources, setResources] = useState<string[]>([]);
+  const [resources, setResources] = useState<string[]>(['heart']);
+  const [ignoreBlank, setIgnoreBlank] = useState<boolean>(true);
   const [feedback, setFeedback] = useState<string>("");
   const token = useContext(TokenContext);
 
@@ -18,7 +19,12 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    downloadIntraday(token, startDate, endDate, resources, setFeedback, setLoading);
+    downloadIntraday(
+      token, 
+      startDate, endDate, 
+      resources, 
+      ignoreBlank,
+      setFeedback, setLoading);
   }
 
   const handleType = (fn: (s: string) => void) => {
@@ -32,6 +38,12 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
 
   const handleCheck = (r: string) => {
     return (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (r === 'heart' && ignoreBlank && (!e.target.checked)) {
+        // Don't allow them to uncheck heart if we're ignoring blank
+        e.preventDefault();
+        return;
+      }
+
       if (e.target.checked) {
         // Add to resources
         setResources([...resources, r])
@@ -41,6 +53,18 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
       }
     }
   }
+
+  const handleIgnoreCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      // Add 'heart' to the resources as well
+      setIgnoreBlank(true);
+      if (!resources.find(x => x === 'heart')) {
+        setResources([...resources, 'heart']);
+      }
+    } else {
+      setIgnoreBlank(false);
+    }
+  } 
   
   return (
     <div className="bg-slate-800 p-4 rounded-md mb-6">
@@ -89,6 +113,20 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
               </div>
             ))
           }
+        </div>
+        <div className="mt-6">
+          <span className="text-gray-200 text-xl">Blank measurements</span>
+            <div className="mt-2">
+              <input 
+                className={styles.checkboxInput} 
+                type="checkbox"
+                checked={ignoreBlank}
+                id="ignoreBlank"
+                name="ignoreBlank"
+                onChange={handleIgnoreCheck}
+              />
+              <label className="inline-block ml-1" htmlFor="ignoreBlank">Ignore measurements without a heart rate?</label>
+            </div>
         </div>
         <div className="mt-6">
           <button

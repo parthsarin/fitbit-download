@@ -75,49 +75,51 @@ interface DateTimeAlpha {
   [key: string]: string
 }
 
+
+function hash(x: DateTimeAlpha): string {
+  return `${x.date} ${x.time}`;
+}
+
+
 /**
- * Merges two arrays by matching their date and time values
- * Warning: This function is slow. There's probably a better way to implement
- * this, but I'm feeling lazy right now.
+ * Merges arrays matching their date and time values
  * 
- * @param a The first array to merge
- * @param b The second array to merge
+ * @param a The array of DateTimeAlpha arrays
+ * @param ignoreBlank If true, only uses the keys from heart rate
  * @returns The merged array
  */
-function merge(a: DateTimeAlpha[], b: DateTimeAlpha[]): DateTimeAlpha[] {
-  // Get the keys
-  let keys: Set<{ date: string, time: string }> = new Set();
+function merge(a: Array<DateTimeAlpha[]>, ignoreBlank: boolean): DateTimeAlpha[] {
+  let datetimes: Set<string> = new Set();
+  
+  // Convert each of the DateTimeAlpha arrays into a map
+  const hashedArrays = a.map(ls => {
+    let o: any = {};
 
-  a.forEach((x: DateTimeAlpha) => {
-    keys.add({ date: x.date, time: x.time });
-  })
+    ls.forEach(x => {
+      o[hash(x)] = x;          // Index each of the objects by the datetime hash
+      datetimes.add(hash(x));  // Add the hash to the overall keys list
+    });
 
-  b.forEach((x: DateTimeAlpha) => {
-    keys.add({ date: x.date, time: x.time });
-  })
+    return o;
+  });
 
   // Merge the arrays
   let output: DateTimeAlpha[] = [];
-  keys.forEach((x: { date: string, time: string }) => {
-    let a_match = a.find((y: DateTimeAlpha) => y.date === x.date && y.time === x.time);
-    let b_match = b.find((y: DateTimeAlpha) => y.date === x.date && y.time === x.time);
+  datetimes.forEach(datetime => {
+    const allMeasurements = hashedArrays.map(o => o[datetime]);
+    output.push(
+      allMeasurements.reduce(
+        (a: DateTimeAlpha, b: DateTimeAlpha) => ({ ...a, ...b })
+      )
+    );
+  });
 
-    // Combine both of the matches, if they exist
-    let merged = {};
-    if (a_match) {
-      merged = { ...a_match };
-    } 
-    if (b_match) {
-      merged = { ...merged, ...b_match };
-    }
-
-    if (merged) {
-      output.push(merged as DateTimeAlpha);
-    }
-  })
-
+  // Optionally remove the keys that are blank
+  if (ignoreBlank) {
+    output = output.filter(x => 'heart' in x);
+  }
+  
   return output;
-
 }
 
 
@@ -125,6 +127,7 @@ async function downloadIntraday(
   token: string,
   startDate: string | Moment, endDate: string | Moment,
   resources: string[],
+  ignoreBlank: boolean,
   giveFeedback: (message: string) => void,
   setLoading: (loading: boolean) => void
 ) {
@@ -168,14 +171,13 @@ async function downloadIntraday(
           });
         })
       });
-      console.log(r, date, resOutput);
 
       dayOutput.push(resOutput);
     }
 
     // Merge together the day
-    // TODO: Doesn't work (more complicated merging needed -- match date & time)
-    dayOutput = dayOutput.reduce(merge)
+    console.log(date, dayOutput);
+    dayOutput = merge(dayOutput, ignoreBlank);
     output = output.concat(dayOutput);
   }
 

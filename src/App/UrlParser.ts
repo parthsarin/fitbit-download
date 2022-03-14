@@ -13,4 +13,9 @@ function getHashParams() {
     return hashParams;
 }
 
-export default getHashParams;
+
+function getBaseUrl() {
+    return window.location.origin + window.location.pathname;
+}
+
+export { getHashParams, getBaseUrl };

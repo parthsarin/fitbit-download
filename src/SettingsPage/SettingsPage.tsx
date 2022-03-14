@@ -26,7 +26,7 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
       <BackButton onClick={() => setPageState(PageState.MainPage)} />
       <div className={`w-4/5 absolute top-20 pb-20 ${styles['settings-page']}`}>
         <h1 className="text-3xl mb-4">Configure settings</h1>
-        <p>To configure this application, you'll need to create a developer account with Fitbit. To get started, visit <a className="text-indigo-400 hover:underline" href="https://dev.fitbit.com/apps">https://dev.fitbit.com/apps</a> and log in if needed. After logging in, you should see a webpage that looks like this:</p>
+        <p>To configure this application, you'll need to create a developer account with Fitbit. To get started, visit <a className="text-indigo-400 hover:underline" target="_blank" rel="noreferrer" href="https://dev.fitbit.com/apps">https://dev.fitbit.com/apps</a> and log in if needed. After logging in, you should see a webpage that looks like this:</p>
         <img
           src={fbAuth1}
           alt="The main page for the Fitbit developer applications, showing no registered applications"
@@ -93,6 +93,7 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
               name="client-id"
               value={oaConfig.clientId}
               onChange={(e) => setOAConfig({...oaConfig, clientId: e.target.value})}
+              tabIndex={2}
             ></input>
           </div>
           <div className="mb-4">
@@ -105,6 +106,7 @@ const SettingsPage = ({ setPageState, oaConfig, setOAConfig }: SettingsPageProps
               name="client-secret"
               value={oaConfig.clientSecret}
               onChange={(e) => setOAConfig({ ...oaConfig, clientSecret: e.target.value })}
+              tabIndex={3}
             ></input>
           </div>                    
           <div className="mt-6">
