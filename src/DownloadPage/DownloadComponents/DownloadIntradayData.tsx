@@ -68,7 +68,7 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
   
   return (
     <div className="bg-slate-800 p-4 rounded-md mb-6">
-      <h2 className="text-2xl">Download intraday data</h2>
+      <h2 className="text-2xl">Download activity data</h2>
       <p className="text-teal-500 mb-6">{feedback}</p>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -125,7 +125,7 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
                 name="ignoreBlank"
                 onChange={handleIgnoreCheck}
               />
-              <label className="inline-block ml-1" htmlFor="ignoreBlank">Ignore measurements without a heart rate?</label>
+            <label className="inline-block ml-1" htmlFor="ignoreBlank">Ignore measurements when the device was likely not being worn (no heartrate)</label>
             </div>
         </div>
         <div className="mt-6">

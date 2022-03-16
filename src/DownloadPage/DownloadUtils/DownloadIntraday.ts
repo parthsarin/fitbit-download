@@ -1,73 +1,5 @@
 import moment, { Moment } from 'moment';
-import Papa from 'papaparse';
-
-interface SleepData {
-  datetime: string;
-  event: string;
-  value: number;
-}
-
-
-const forceDownload = (data: Array<any>, filename: string) => {
-  const csv = Papa.unparse(data);
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  a.click();
-}
-
-async function downloadSleep(
-  token: string, 
-  startDate: string | Moment, endDate: string | Moment,
-  giveFeedback: (message: string) => void
-) {
-  let output: Array<SleepData> = [];
-
-  await fetch(`https://api.fitbit.com/1.2/user/-/sleep/date/${startDate}/${endDate}.json`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Accept': 'application/json',
-    }
-  })
-  .then(res => res.json())
-  .then(json => {
-    if ('success' in json && !json.success) {
-      alert(json.errors[0].message);
-      return;
-    }
-
-    // Summary information at the top
-    json.sleep.forEach((day: any) => {
-      for (const evt of ["minutesAsleep", "minutesToFallAsleep", "minutesAwake", "timeInBed"]) {
-        output.push({
-          datetime: day.dateOfSleep,
-          event: evt,
-          value: day[evt],
-        });
-      }
-
-      const granular = day.levels.data;
-      granular.forEach((log: any) => {
-        output.push({
-          datetime: moment(log.dateTime).format("YYYY-MM-DD HH:MM:SS A"),
-          event: log.level,
-          value: log.seconds,
-        });
-      })
-    })
-  })
-
-  if (output.length > 0) {
-    forceDownload(output, `sleep_${startDate}_${endDate}.csv`);
-  } else {
-    giveFeedback("There is no data for the specified date range");
-  }
-}
-
+import forceDownload from './Generic';
 
 interface DateTimeAlpha {
   date: string,
@@ -135,8 +67,9 @@ async function downloadIntraday(
   startDate = moment(startDate, "YYYY-MM-DD");
   endDate = moment(endDate, "YYYY-MM-DD");
   let output: Array<any> = [];
+  let failed: string[] = [];
 
-  for (var m = startDate; m.diff(endDate, 'days') <= 0; m.add(1, 'days')) {
+  for (var m = startDate.clone(); m.diff(endDate, 'days') <= 0; m.add(1, 'days')) {
     let dayOutput: Array<any> = []; // merge together days
     const date = m.format('YYYY-MM-DD');
 
@@ -153,7 +86,13 @@ async function downloadIntraday(
           }
         }
       )
-      .then(res => res.json())
+      .then(res => {
+        if (res.ok) {
+          return res.json()
+        } else {
+          throw new Error(`${res.status} ${res.statusText}`);
+        }
+      })
       .then(json => {
         if ('success' in json && !json.success) {
           alert(json.errors[0].message);
@@ -170,23 +109,29 @@ async function downloadIntraday(
             [r]: val
           });
         })
+      })
+      .catch(err => {
+        failed.push(`${r}, ${date}, ${err}`);
       });
 
       dayOutput.push(resOutput);
     }
 
     // Merge together the day
-    console.log(date, dayOutput);
     dayOutput = merge(dayOutput, ignoreBlank);
     output = output.concat(dayOutput);
   }
 
   if (output.length > 0) {
-    forceDownload(output, `intraday_${startDate.format('YYYY-MM-DD')}_${endDate.format('YYYY-MM-DD')}.csv`);
+    forceDownload(output, `activity_${startDate.format('YYYY-MM-DD')}_${endDate.format('YYYY-MM-DD')}.csv`);
   } else {
     giveFeedback("There is no data for the specified date range");
+  }
+
+  if (failed.length > 0) {
+    giveFeedback(`Failed to download: ${failed.join(', ')}`);
   }
   setLoading(false);
 }
 
-export { downloadSleep, downloadIntraday };
+export default downloadIntraday;
