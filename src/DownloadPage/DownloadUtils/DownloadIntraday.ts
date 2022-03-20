@@ -122,8 +122,24 @@ async function downloadIntraday(
     output = output.concat(dayOutput);
   }
 
+  output = output.map(l => {
+    const datetime = `${l.date} ${l.time}`;
+    delete l.date;
+    delete l.time;
+
+    return {
+      datetime,
+      ...l
+    }
+  })
+
+  output.sort((a, b) => (a.datetime < b.datetime) ? -1 : 1);
+
   if (output.length > 0) {
-    forceDownload(output, `activity_${startDate.format('YYYY-MM-DD')}_${endDate.format('YYYY-MM-DD')}.csv`);
+    forceDownload(
+      output, 
+      `activity_${startDate.format('YYYY-MM-DD')}_${endDate.format('YYYY-MM-DD')}.csv`
+    );
   } else {
     giveFeedback("There is no data for the specified date range");
   }

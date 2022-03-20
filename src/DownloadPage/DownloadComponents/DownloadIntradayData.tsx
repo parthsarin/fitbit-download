@@ -15,7 +15,8 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
   const [feedback, setFeedback] = useState<string>("");
   const token = useContext(TokenContext);
 
-  const allResources = ["heart", "calories", "distance", "elevation", "floors", "steps"];
+  const mainResources = ["heart", "calories", "distance", "steps"];
+  const extraResources = ["elevation", "floors"];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,7 +101,7 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
         <div className="mt-6">
           <span className="text-gray-200 text-xl">Variables</span>
           {
-            allResources.map((r, i) => (
+            mainResources.map((r, i) => (
               <div key={r} className={i === 0 ? "mt-2" : ""}>
                 <input 
                   className={styles.checkboxInput} 
@@ -113,6 +114,23 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
               </div>
             ))
           }
+          <details>
+            <summary className="ml-1 mt-1">additional variables</summary>
+            {
+              extraResources.map((r, i) => (
+                <div key={r} className={i === 0 ? "mt-2" : ""}>
+                  <input
+                    className={styles.checkboxInput}
+                    type="checkbox"
+                    key={`input-${r}`} id={r} name={r}
+                    checked={resources.includes(r)}
+                    onChange={handleCheck(r)}
+                  />
+                  <label className="inline-block ml-1" key={`label-${r}`} htmlFor={r}>{r}</label>
+                </div>
+              ))
+            }
+          </details>
         </div>
         <div className="mt-6">
           <span className="text-gray-200 text-xl">Blank measurements</span>
