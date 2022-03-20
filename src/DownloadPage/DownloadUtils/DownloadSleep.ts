@@ -93,7 +93,7 @@ async function downloadSleepHourly(
       const granular = day.levels.data;
       granular.forEach((log: any) => {
         output.push({
-          datetime: moment(log.dateTime).format("YYYY-MM-DD HH:MM:SS A"),
+          datetime: moment(log.dateTime).format("YYYY-MM-DD HH:MM"),
           event: log.level,
           value: log.seconds,
         });
