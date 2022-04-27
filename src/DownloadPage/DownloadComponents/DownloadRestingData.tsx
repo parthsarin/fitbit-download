@@ -1,19 +1,18 @@
 import React, { useContext, useState } from "react";
 import { TokenContext } from "../../App";
-import { downloadSleep, SleepGranularity } from "../DownloadUtils";
+import { downloadResting } from "../DownloadUtils";
 import styles from '../DownloadPage.module.css';
 
-const DownloadSleepData = () => {
+const DownloadRestingData = () => {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [feedback, setFeedback] = useState<string>("");
-  const [granularity, setGranularity] = useState<string>(SleepGranularity[0]);
 
   const token = useContext(TokenContext);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    downloadSleep(token, startDate, endDate, granularity, setFeedback);
+    downloadResting(token, startDate, endDate, setFeedback);
   }
 
   const handleType = (fn: (s: string) => void) => {
@@ -26,9 +25,9 @@ const DownloadSleepData = () => {
   }
 
   return (
-    <div className="bg-slate-800 p-4 rounded-md mb-6">
-      <h2 className="text-2xl">Download sleep data</h2>
-      <p className="text-teal-500 mb-6">{ feedback }</p>
+    <div className="bg-slate-800 p-4 rounded-md">
+      <h2 className="text-2xl">Download resting heart rate data</h2>
+      <p className="text-teal-500 mb-6">{feedback}</p>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="start-date">
@@ -56,23 +55,6 @@ const DownloadSleepData = () => {
             onChange={handleType(setEndDate)}
           ></input>
         </div>
-        <div className="mb-4">
-          <label htmlFor="granularity">
-            <span className="text-gray-200 text-xl">Granularity</span>
-          </label>
-          <select
-            className={styles.input}
-            name="granularity"
-            value={granularity}
-            onChange={(e) => setGranularity(e.target.value)}
-          >
-            {
-              SleepGranularity.map((g: string) => (
-                <option key={g}>{g}</option>
-              ))
-            }
-          </select>
-        </div>
         <div className="mt-6">
           <button
             onClick={handleSubmit}
@@ -93,4 +75,4 @@ const DownloadSleepData = () => {
   )
 }
 
-export default DownloadSleepData;
+export default DownloadRestingData;

@@ -5,6 +5,7 @@ import Loading from "../Loading";
 import {PageState} from "../MainPage";
 
 import DownloadIntradayData from "./DownloadComponents/DownloadIntradayData";
+import DownloadRestingData from "./DownloadComponents/DownloadRestingData";
 import DownloadSleepData from "./DownloadComponents/DownloadSleepData";
 import styles from './DownloadPage.module.css';
 
@@ -23,6 +24,7 @@ const DownloadPage = ({ setPageState }: DownloadPageProps) => {
             <h1 className="text-3xl mb-4">Download data</h1>
             <DownloadIntradayData setLoading={setLoading} />
             <DownloadSleepData />
+            <DownloadRestingData />
         </div>
         </>
     );
