@@ -115,7 +115,7 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
             ))
           }
           <details>
-            <summary className="ml-1 mt-1">additional variables</summary>
+            <summary className="ml-1 mt-1 cursor-pointer">additional variables</summary>
             {
               extraResources.map((r, i) => (
                 <div key={r} className={i === 0 ? "mt-2" : ""}>

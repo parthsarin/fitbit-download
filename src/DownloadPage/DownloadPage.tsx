@@ -24,7 +24,10 @@ const DownloadPage = ({ setPageState }: DownloadPageProps) => {
             <h1 className="text-3xl mb-4">Download data</h1>
             <DownloadIntradayData setLoading={setLoading} />
             <DownloadSleepData />
-            <DownloadRestingData />
+            <details>
+                <summary className="mb-4 cursor-pointer">Additional data fields</summary>
+                <DownloadRestingData />
+            </details>
         </div>
         </>
     );
