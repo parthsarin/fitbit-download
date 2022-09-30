@@ -69,11 +69,29 @@ async function downloadIntraday(
   let output: Array<any> = [];
   let failed: string[] = [];
 
+  // Resources to download
+  let resourcesToDownload = [...resources];
+  if (
+    (resources.includes('level') || resources.includes('mets')) 
+    && !resources.includes('calories')
+  ) {
+    // Add in calories if it's needed for level or mets
+    resourcesToDownload.push('calories');
+    resourcesToDownload = resourcesToDownload.filter(x => x !== 'level' && x !== 'mets');
+  }
+  else if (
+    (resources.includes('level') || resources.includes('mets')) 
+    && resources.includes('calories')
+  ) {
+    // Remove level and mets if calories is already there
+    resourcesToDownload = resourcesToDownload.filter(x => x !== 'level' && x !== 'mets');
+  }
+
   for (var m = startDate.clone(); m.diff(endDate, 'days') <= 0; m.add(1, 'days')) {
     let dayOutput: Array<any> = []; // merge together days
     const date = m.format('YYYY-MM-DD');
 
-    for (const r of resources) {
+    for (const r of resourcesToDownload) {
       let resOutput: Array<any> = [];
 
       await fetch(
@@ -126,6 +144,10 @@ async function downloadIntraday(
     const datetime = `${l.date} ${l.time}`;
     delete l.date;
     delete l.time;
+
+    if (!resources.includes('level')) delete l.level;
+    if (!resources.includes('mets')) delete l.mets;
+    if (!resources.includes('calories')) delete l.calories;
 
     return {
       datetime,

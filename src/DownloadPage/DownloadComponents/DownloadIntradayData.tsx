@@ -16,7 +16,7 @@ const DownloadIntradayData = ({ setLoading }: DownloadIntradayDataProps) => {
   const token = useContext(TokenContext);
 
   const mainResources = ["heart", "calories", "distance", "steps"];
-  const extraResources = ["elevation", "floors"];
+  const extraResources = ["elevation", "floors", "level", "mets"];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
